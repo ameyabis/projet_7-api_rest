@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 
 class UserController extends AbstractController
@@ -63,11 +63,12 @@ class UserController extends AbstractController
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 3);
 
-        $idCache = 'getAllUser-' . $currentUser->getCustomer()->getName() . '-' . $page . '-' . $limit;
+        $idCache = 'getAllUser-'.$currentUser->getCustomer()->getName().'-'.$page.'-'.$limit;
         $users = $this->cachePool->get(
             $idCache,
             function (ItemInterface $item) use ($page, $limit, $currentUser) {
                 $item->tag('usersCache');
+
                 return $this->em->getRepository(User::class)->findAllUserPagination($page, $limit, $currentUser);
             }
         );
@@ -81,7 +82,7 @@ class UserController extends AbstractController
     /**
      * Cette méthode permet de récupérer un utilisateur présent dans votre compagnie.
      */
-    #[Route('/api/user/{id}', name: 'one_user', methods: ['GET'])]
+    #[Route('/api/user/{id}', name: 'one_user', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
     #[OA\Response(
         response: 200,
         description: 'Retourne la liste d\'un utilisateur',
@@ -98,7 +99,7 @@ class UserController extends AbstractController
     ): JsonResponse {
         $userSearch = $this->em->getRepository(User::class)->findOneBy([
             'id' => $id,
-            'customer' => $currentUser->getCustomer()
+            'customer' => $currentUser->getCustomer(),
         ]);
 
         $context = SerializationContext::create()->setGroups(['getUsers']);
@@ -110,7 +111,7 @@ class UserController extends AbstractController
     /**
      * Cette méthode permet de supprimer un utilisateur présent dans votre compagnie.
      */
-    #[Route('/api/user/{id}', name: 'delete_user', methods: ['DELETE'])]
+    #[Route('/api/user/{id}', name: 'delete_user', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
     #[OA\Response(
         response: 204,
         description: 'Retourne la liste des utilisateurs',

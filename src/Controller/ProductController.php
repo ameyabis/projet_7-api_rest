@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 
 class ProductController extends AbstractController
@@ -56,7 +55,7 @@ class ProductController extends AbstractController
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 10);
 
-        $idCache = 'getAllProducts-' . $page . '-' . $limit;
+        $idCache = 'getAllProducts-'.$page.'-'.$limit;
         $products = $this->cachePool->get(
             $idCache,
             function (ItemInterface $item) use ($page, $limit) {
@@ -85,7 +84,7 @@ class ProductController extends AbstractController
     #[OA\Tag(name: 'Product')]
     public function getProduct(Product $product): JsonResponse
     {
-        $idCache = 'getProduct-' . $product->getId();
+        $idCache = 'getProduct-'.$product->getId();
         $productData = $this->cachePool->get(
             $idCache,
             function (ItemInterface $item) use ($product) {
@@ -95,6 +94,7 @@ class ProductController extends AbstractController
             }
         );
         $jsonProduct = $this->serializer->serialize($productData, 'json');
+
         return new JsonResponse($jsonProduct, Response::HTTP_OK, ['accept' => 'json'], true);
     }
 }

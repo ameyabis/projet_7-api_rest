@@ -12,12 +12,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    public function __construct(private UserPasswordHasherInterface $userPasswordHasher){}
+    public function __construct(private UserPasswordHasherInterface $userPasswordHasher)
+    {
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
 
-        //customer
+        // customer
         $orange = new Customer();
         $orange->setName('ORANGE');
         $orange->setPhone($faker->phoneNumber());
@@ -36,11 +39,11 @@ class AppFixtures extends Fixture
         $bouygues->setContact($faker->email());
         $manager->persist($bouygues);
 
-        //user
-        //ORANGE
+        // user
+        // ORANGE
         $userOrange1 = new User();
         $userOrange1->setUsername('orange_1');
-        $userOrange1->setPassword($this->userPasswordHasher->hashPassword($userOrange1, "password"));
+        $userOrange1->setPassword($this->userPasswordHasher->hashPassword($userOrange1, 'password'));
         $userOrange1->setCustomer($orange);
         $userOrange1->setFirstname($faker->firstName());
         $userOrange1->setLastname($faker->lastName());
@@ -49,17 +52,17 @@ class AppFixtures extends Fixture
 
         $userOrange2 = new User();
         $userOrange2->setUsername('orange_2');
-        $userOrange2->setPassword($this->userPasswordHasher->hashPassword($userOrange2, "password"));
+        $userOrange2->setPassword($this->userPasswordHasher->hashPassword($userOrange2, 'password'));
         $userOrange2->setCustomer($orange);
         $userOrange2->setFirstname($faker->firstName());
         $userOrange2->setLastname($faker->lastName());
         $userOrange2->setEmail($faker->email());
         $manager->persist($userOrange2);
 
-        //SFR
+        // SFR
         $userSfr1 = new User();
         $userSfr1->setUsername('sfr_1');
-        $userSfr1->setPassword($this->userPasswordHasher->hashPassword($userSfr1, "password"));
+        $userSfr1->setPassword($this->userPasswordHasher->hashPassword($userSfr1, 'password'));
         $userSfr1->setCustomer($sfr);
         $userSfr1->setFirstname($faker->firstName());
         $userSfr1->setLastname($faker->lastName());
@@ -68,7 +71,7 @@ class AppFixtures extends Fixture
 
         $userSfr2 = new User();
         $userSfr2->setUsername('sfr_2');
-        $userSfr2->setPassword($this->userPasswordHasher->hashPassword($userSfr2, "password"));
+        $userSfr2->setPassword($this->userPasswordHasher->hashPassword($userSfr2, 'password'));
         $userSfr2->setCustomer($sfr);
         $userSfr2->setFirstname($faker->firstName());
         $userSfr2->setLastname($faker->lastName());
@@ -77,14 +80,14 @@ class AppFixtures extends Fixture
 
         $userSfr3 = new User();
         $userSfr3->setUsername('sfr_3');
-        $userSfr3->setPassword($this->userPasswordHasher->hashPassword($userSfr3, "password"));
+        $userSfr3->setPassword($this->userPasswordHasher->hashPassword($userSfr3, 'password'));
         $userSfr3->setCustomer($sfr);
         $userSfr3->setFirstname($faker->firstName());
         $userSfr3->setLastname($faker->lastName());
         $userSfr3->setEmail($faker->email());
         $manager->persist($userSfr3);
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; ++$i) {
             $product = new Product(
                 $faker->name(),
                 $faker->text(200),

@@ -14,22 +14,22 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getUsers"])]
+    #[Groups(['getUsers'])]
     private int $id;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getUsers"])]
+    #[Groups(['getUsers'])]
     private string $name;
 
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'customer')]
     private Collection $users;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getUsers"])]
+    #[Groups(['getUsers'])]
     private string $phone;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getUsers"])]
+    #[Groups(['getUsers'])]
     private string $contact;
 
     public function __construct()
