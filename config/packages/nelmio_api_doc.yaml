@@ -2,7 +2,7 @@ nelmio_api_doc:
     documentation:
         info:
             title: BileMo
-            description: Visual notre catalogue !
+            description: Visualisez notre catalogue !
             version: 1.0.0
         paths:
             /api/login_check:
@@ -10,7 +10,7 @@ nelmio_api_doc:
                     operationId: postCredentialsItem
                     tags:
                         - Token
-                    summary: Permet d'obtenir le token JWT pour se logger.
+                    summary: Permet d'obtenir le token JWT pour se connecter.
                     requestBody:
                         description: Créer un nouveau token JWT
                         content:
