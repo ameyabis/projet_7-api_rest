@@ -208,7 +208,7 @@ class UserController extends AbstractController
         $jsonUser = $this->serializer->serialize($user, 'json', $context);
 
         $location = $urlGenerator->generate(
-            'one_users',
+            'one_user',
             ['id' => $user->getId()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
