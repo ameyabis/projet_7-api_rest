@@ -17,15 +17,15 @@ git clone https://github.com/ameyabis/projet_7-api_rest.git
 ## Installez composer
 Voici le [lien](https://getcomposer.org/doc/00-intro.md) pour installer Composer.
 
-## Installez les dependences manquantes
-```sh
-composer install
-```
-
 ## Configurer votre fichier .env
 Créer un fichier .env a partir du fichier .env.dist
 Remplire la variable DATA_URL pour pouvoir se connecter à la base de donnéess MYSQL
 Remplire la variable JWT_SECRET avec une chaine de caractère
+
+## Installez les dependences manquantes
+```sh
+composer install
+```
 
 ## Créez la base de données
 ```sh
