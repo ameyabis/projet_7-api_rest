@@ -60,8 +60,8 @@ class UserController extends AbstractController
         #[CurrentUser] ?User $currentUser,
         Request $request
     ): JsonResponse {
-        $page = $request->get('page', 1);
-        $limit = $request->get('limit', 3);
+        $page = (int) $request->get('page', 1);
+        $limit = (int) $request->get('limit', 3);
 
         $idCache = 'getAllUser-'.$currentUser->getCustomer()->getName().'-'.$page.'-'.$limit;
         $users = $this->cachePool->get(
@@ -72,6 +72,10 @@ class UserController extends AbstractController
                 return $this->em->getRepository(User::class)->findAllUserPagination($page, $limit, $currentUser);
             }
         );
+
+        if (empty($users)) {
+            throw $this->createNotFoundException('Revoyez vos filtres, aucune données a été trouvé.');
+        }
 
         $context = SerializationContext::create()->setGroups(['getUsers']);
         $jsonUser = $this->serializer->serialize($users, 'json', $context);
@@ -95,8 +99,12 @@ class UserController extends AbstractController
     public function getOneUser(
         int $id,
         #[CurrentUser] ?User $currentUser,
-        User $user
+        ?User $user
     ): JsonResponse {
+        if (null === $user || $currentUser->getCustomer() !== $user->getCustomer()) {
+            throw $this->createNotFoundException('L\'utilisateur n\'existe pas.');
+        }
+
         $userSearch = $this->em->getRepository(User::class)->findOneBy([
             'id' => $id,
             'customer' => $currentUser->getCustomer(),

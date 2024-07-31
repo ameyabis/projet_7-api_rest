@@ -52,8 +52,8 @@ class ProductController extends AbstractController
     public function getProductsPagination(
         Request $request,
     ): JsonResponse {
-        $page = $request->get('page', 1);
-        $limit = $request->get('limit', 10);
+        $page = (int) $request->get('page', 1);
+        $limit = (int) $request->get('limit', 10);
 
         $idCache = 'getAllProducts-'.$page.'-'.$limit;
         $products = $this->cachePool->get(
@@ -64,6 +64,11 @@ class ProductController extends AbstractController
                 return $this->em->getRepository(Product::class)->findAllProductPagination($page, $limit);
             }
         );
+
+        if (empty($products)) {
+            throw $this->createNotFoundException('Revoyez vos filtres, aucune données a été trouvé.');
+        }
+
         $jsonProducts = $this->serializer->serialize($products, 'json');
 
         return new JsonResponse($jsonProducts, Response::HTTP_OK, [], true);
@@ -82,8 +87,12 @@ class ProductController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'Product')]
-    public function getProduct(Product $product): JsonResponse
+    public function getProduct(?Product $product): JsonResponse
     {
+        if (null === $product) {
+            throw $this->createNotFoundException('Le produit n\'existe pas.');
+        }
+
         $idCache = 'getProduct-'.$product->getId();
         $productData = $this->cachePool->get(
             $idCache,
