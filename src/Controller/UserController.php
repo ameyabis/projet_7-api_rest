@@ -144,8 +144,7 @@ class UserController extends AbstractController
     public function deleteUser(
         User $user
     ): JsonResponse {
-        $this->em->remove($user);
-        $this->em->flush();
+        $this->em->getRepository(User::class)->removeUser($user);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

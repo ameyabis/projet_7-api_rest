@@ -48,4 +48,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $qb->getQuery()->getResult();
     }
+
+    public function removeUser(User $user): void
+    {
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+    }
 }
