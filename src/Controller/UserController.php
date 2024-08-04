@@ -208,8 +208,7 @@ class UserController extends AbstractController
             return new JsonResponse($this->serializer->serialize($errors, 'json'), Response::HTTP_BAD_REQUEST, [], true);
         }
 
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->em->getRepository(User::class)->save($user);
 
         $context = SerializationContext::create()->setGroups(['getUsers']);
         $jsonUser = $this->serializer->serialize($user, 'json', $context);
